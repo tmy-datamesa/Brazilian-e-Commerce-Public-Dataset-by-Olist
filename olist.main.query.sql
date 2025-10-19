@@ -891,48 +891,39 @@ ORDER BY no_of_orders_daily DESC;
 /** CEVAP - 2017 Kasım’da büyük bir sipariş sıçraması vardı; bunun nedeni insanların Noel için bir ay önceden hazırlık yapması olabilir. En yüksek sipariş 24 Kasım’da (1176). **/
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
---ANALİZ VE İŞ İÇGÖRÜLERİ
---Olist'in e-ticaret platformuna dair daha iyi içgörüler kazanmasına ve büyüme fırsatlarını optimize etmesine yardımcı olmak için aşağıdaki iş sorularına yanıt vereceğiz:
---	1. Olist tarafından elde edilen toplam gelir nedir ve bu gelir zaman içinde nasıl değişmiştir?
+-- # ANALİZ VE İŞ İÇGÖRÜLERİ
+-- Olist'in e-ticaret platformu için içgörü üretmek ve büyüme fırsatlarını optimize etmek amacıyla şu soruları yanıtlıyoruz:
+-- 1) Toplam gelir nedir? Zaman içindeki değişimi nasıldır?
+-- 2) Toplam sipariş sayısı nedir? Aylık/mevsimsel değişim nasıldır?
+-- 3) En popüler ürün kategorileri hangileridir? Satış hacimleri nasıl karşılaştırılır?
+-- 4) Ortalama sipariş değeri (AOV) nedir? Kategori/ödeme tipine göre nasıl değişir?
+-- 5) Kaç aktif satıcı vardır? Zaman içindeki değişimi nasıldır?
+-- 6) Satıcı puanlarının dağılımı nedir? Satış performansına etkisi nedir?
+-- 7) Tekrar alım yapan müşteri sayısı ve gelir payı nedir?
+-- 8) Ürünlerin ortalama müşteri puanı (rating) nedir? Satışa etkisi nedir?
+-- 9) Ortalama sipariş iptal oranı nedir? Performansa etkisi nedir?
+-- 10) En çok satan ürünler nelerdir? Trendleri zaman içinde nasıl değişir?
+-- 11) En sık kullanılan ödeme yöntemleri nelerdir? Kategori/konuma göre nasıl farklılaşır?
+-- 13) Hangi kategoriler en yüksek kâr marjına sahiptir? Kârlılık nasıl artırılabilir?
+-- 15) Yüksek müşteri yoğunluklu konumlar nelerdir? Bu konumlarda retention nasıl?
 
---toplam gelir 
+-- ## 1) Toplam gelir ve zaman içindeki değişim
 
---	2. Olist'te toplam kaç sipariş verilmiştir ve bu sayı aylık veya mevsimsel olarak nasıl bir değişim göstermektedir?
---	3. Olist'teki en popüler ürün kategorileri nelerdir ve satış hacimleri birbirine göre nasıldır?
---	4. Olist'te ortalama sipariş değeri (AOV) nedir ve bu değer ürün kategorisine veya ödeme yöntemine göre nasıl değişmektedir?
---	5. Olist'te kaç aktif satıcı bulunmaktadır ve bu sayı zaman içinde nasıl değişmektedir?
---	6. Olist'teki satıcı puanlarının dağılımı nedir ve bu dağılım satış performansını nasıl etkilemektedir?
---	7. Tekrar alım (repeat purchase) yapan kaç müşteri vardır ve bu müşteriler toplam satışların yüzde kaçını oluşturmaktadır?
---	8. Olist'te satılan ürünlerin ortalama müşteri puanı (rating) nedir ve bu puan satış performansını nasıl etkilemektedir?
---	9. Olist'teki ortalama sipariş iptal oranı nedir ve bu oran satış performansını nasıl etkilemektedir?
---	10. Olist'teki en çok satan ürünler nelerdir ve bu ürünlerin satış trendleri zaman içinde nasıl değişmiştir?
---	11. Olist müşterileri tarafından en sık kullanılan ödeme yöntemleri nelerdir ve bunlar ürün kategorisine veya coğrafi bölgeye göre nasıl değişmektedir?
---	12. Müşteri yorumları ve puanları, Olist'teki ürün performansını nasıl etkilemektedir?
---	13. Hangi ürün kategorileri en yüksek kâr marjlarına sahiptir ve şirket, farklı kategorilerdeki kârlılığı nasıl artırabilir?
---	14. Olist'in pazarlama harcaması ve kanal karması, satışları ve müşteri edinme maliyetlerini (CAC) nasıl etkilemektedir ve şirket Yatırım Getirisini (ROI) artırmak için pazarlama stratejisini nasıl optimize edebilir?
---  15.Yüksek müşteri yoğunluğuna sahip coğrafi konumlar (Geolocation) nelerdir? Bu konumlara göre müşteri tutma (retention) oranını hesaplayın.
-
-
---ANALİZ VE İŞ İÇGÖRÜLERİ
---Olist'in e-ticaret platformuna dair daha iyi içgörüler kazanmasına ve büyüme fırsatlarını optimize etmesine yardımcı olmak için aşağıdaki iş sorularına yanıt vereceğiz:
---	1. Olist tarafından elde edilen toplam gelir nedir ve bu gelir zaman içinde nasıl değişmiştir?
-
--- Toplam gelir (sadece teslim edilen siparişler) --15419773.749999616
+-- Toplam gelir (yalnızca teslim edilen siparişler) → 15419773.749999616
 SELECT
   SUM(oi.price + oi.freight_value) AS total_revenue
 FROM `pacific-legend-474020-b4.olist.olist_orders_dataset` o
 JOIN `pacific-legend-474020-b4.olist.olist_order_items_dataset` oi USING(order_id)
 WHERE o.order_status = 'delivered';
 
--- Toplam gelir: ödenen tutarların toplamı --15862973.819999663
+-- Toplam gelir (ödenen tutarların toplamı) → 15862973.819999663
 SELECT
   SUM(op.payment_value) AS total_revenue_payments
 FROM `pacific-legend-474020-b4.olist.olist_order_payments_dataset` op
 JOIN `pacific-legend-474020-b4.olist.olist_orders_dataset` o
   USING (order_id)
-WHERE o.order_approved_at IS NOT NULL           -- ödeme onayı var
-  AND o.order_status <> 'canceled';             -- iptalleri hariç tut
-
+WHERE o.order_approved_at IS NOT NULL           -- Ödeme onayı var
+  AND o.order_status <> 'canceled';             -- İptaller hariç
 
 -- Aylık ciro (ödemeye göre)
 SELECT
@@ -958,12 +949,12 @@ WHERE o.order_approved_at IS NOT NULL
 GROUP BY year_quarter
 ORDER BY year_quarter;
 
---	2. Olist'te toplam kaç sipariş verilmiştir ve bu sayı aylık veya mevsimsel olarak nasıl bir değişim göstermektedir?
+-- ## 2) Toplam sipariş sayısı ve dönemsel değişim
 
 select count(distinct order_id) as total_orders
 from`pacific-legend-474020-b4.olist.olist_orders_dataset`;
 
---Aylık zaman serisi (trend)
+-- Aylık zaman serisi (trend)
 select 
 date_trunc(date(order_purchase_timestamp),MONTH) AS month,
 count(order_id) as nb_of_orders
@@ -971,8 +962,7 @@ from `pacific-legend-474020-b4.olist.olist_orders_dataset`
 group by month
 order by month;
 
---Ayın mevsimselliği (yıllardan bağımsız “hangi ay daha yoğun?”)
-
+-- Ay bazında mevsimsellik (yıllardan bağımsız)
 SELECT
   EXTRACT(MONTH FROM DATE(order_purchase_timestamp)) AS month_no,
   FORMAT_DATE('%B', DATE_TRUNC(DATE(order_purchase_timestamp), MONTH)) AS month_name,
@@ -981,7 +971,7 @@ FROM `pacific-legend-474020-b4.olist.olist_orders_dataset`
 GROUP BY month_no, month_name
 ORDER BY month_no;
 
---Q1–Q4 kırılımında sipariş trendi.
+-- Çeyrek (Q1–Q4) kırılımında sipariş trendi
 SELECT
   DATE_TRUNC(DATE(order_purchase_timestamp), QUARTER) AS quarter_start,
   EXTRACT(YEAR   FROM DATE(order_purchase_timestamp)) AS yr,
@@ -1001,9 +991,9 @@ FROM `pacific-legend-474020-b4.olist.olist_orders_dataset`
 GROUP BY yr, iso_week, iso_year_start
 ORDER BY yr, iso_week;
 
+-- ## 3) Popüler kategoriler ve satış hacimleri
 
---	3. Olist'teki en popüler ürün kategorileri nelerdir ve satış hacimleri birbirine göre nasıldır?
--- Kategoriye göre sipariş sayısı + payments'tan toplam ciro
+-- Kategori bazında sipariş sayısı + (payments) toplam ciro
 SELECT
   COALESCE(pc.string_field_1, 'unknown_category') AS category, 
   COUNT( o.order_id) AS num_of_orders,
@@ -1018,10 +1008,9 @@ WHERE o.order_status = 'delivered'
 GROUP BY category
 ORDER BY num_of_orders DESC;
 
+-- ## 4) Ortalama sipariş değeri (AOV) – kategori/ödeme tipine göre
 
---	4. Olist'te ortalama sipariş değeri (AOV) nedir ve bu değer ürün kategorisine veya ödeme yöntemine göre nasıl değişmektedir?
-
---Ürün kategorisine göre
+-- Ürün kategorisine göre AOV
 SELECT
   COALESCE(pc.string_field_1, 'unknown_category') AS category,
   (SUM(pa.payment_value) / COUNT(o.order_id))     AS avg_order_val
@@ -1037,8 +1026,7 @@ LEFT JOIN `pacific-legend-474020-b4.olist.product_category_name_translation` pc
 GROUP BY category
 ORDER BY avg_order_val DESC;
 
-
--- Ödeme yöntemine göre
+-- Ödeme yöntemine göre AOV
 SELECT DISTINCT
   pa.payment_type,
   (SUM(pa.payment_value) / COUNT(o.order_id)) AS avg_order_val
@@ -1050,11 +1038,9 @@ JOIN `pacific-legend-474020-b4.olist.olist_order_items_dataset`as oi
 GROUP BY pa.payment_type
 ORDER BY avg_order_val DESC;
 
+-- ## 5) Aktif satıcı sayısı ve zaman içi değişim
 
---	5. Olist'te kaç aktif satıcı bulunmaktadır ve bu sayı zaman içinde nasıl değişmektedir?
-
--- min 3 months
-
+-- Minimum 3 ay aktif olan satıcılar
 WITH seller_stats AS (
   SELECT
     oi.seller_id,
@@ -1068,14 +1054,11 @@ WITH seller_stats AS (
   WHERE o.order_status <> 'canceled'
   GROUP BY oi.seller_id
 )
-
 SELECT COUNT(*) AS active_sellers_3m
 FROM seller_stats
 WHERE DATE_DIFF(end_date, start_date, MONTH) >= 3;
 
-
--- min 6 months
-
+-- Minimum 6 ay aktif olan satıcılar
 WITH seller_stats AS (
   SELECT
     oi.seller_id,
@@ -1089,13 +1072,11 @@ WITH seller_stats AS (
   WHERE o.order_status <> 'canceled'
   GROUP BY oi.seller_id
 )
-
 SELECT COUNT(*) AS active_sellers_3m
 FROM seller_stats
 WHERE DATE_DIFF(end_date, start_date, MONTH) >= 6;
 
-
--- Active sellers by year (min 3 months activity)
+-- Yıllık aktif satıcı (min. 3 ay aktivite)
 SELECT
   EXTRACT(YEAR FROM DATE(o.order_approved_at)) AS year,
   COUNT(DISTINCT s.seller_id)                  AS active_sellers,
@@ -1119,8 +1100,7 @@ HAVING DATE_DIFF(
          MONTH) >= 3
 ORDER BY year, active_sellers DESC;
 
-
---	6. Olist'teki satıcı puanlarının dağılımı nedir ve bu dağılım satış performansını nasıl etkilemektedir?
+-- ## 6) Satıcı puan dağılımı ve performans etkisi
 
 SELECT
   CASE r.review_score
@@ -1147,11 +1127,9 @@ ORDER BY CASE rating
   WHEN 'Very Bad'  THEN 5
 END ASC;
 
+-- ## 7) Tekrar alım yapan müşteri ve gelir payı
 
---	7. Tekrar alım (repeat purchase) yapan kaç müşteri vardır ve bu müşteriler toplam satışların yüzde kaçını oluşturmaktadır? 
-
---Tekrar alışveriş yapan müşteri sayısı - 2924
-
+-- Tekrar alışveriş yapan müşteri sayısı → 2924
 WITH cust_orders AS (
   SELECT
     c.customer_unique_id,
@@ -1166,13 +1144,12 @@ SELECT COUNT(*) AS repeat_customers
 FROM cust_orders
 WHERE orders_cnt > 1;
 
-
--- Repeat purchase sayısı ve toplam satış içindeki payı (%)5,67
+-- Repeat purchase sayısı ve toplam satış içindeki payı (%) → 5,67
 WITH valid_orders AS (
   SELECT
     o.order_id,
     c.customer_unique_id,
-    COUNT(*) OVER (PARTITION BY c.customer_unique_id) AS order_cnt  -- müşteri başı sipariş adedi
+    COUNT(*) OVER (PARTITION BY c.customer_unique_id) AS order_cnt  
   FROM `pacific-legend-474020-b4.olist.olist_orders_dataset`as o
   JOIN `pacific-legend-474020-b4.olist.olist_customers_dataset`as c USING (customer_id)
   WHERE o.order_status <> 'canceled'          
@@ -1187,5 +1164,146 @@ SELECT
   ROUND(100 * SUM(IF(order_cnt > 1, p.order_payment, 0)) / SUM(p.order_payment), 2) AS repeat_revenue_pct
 FROM valid_orders vo
 JOIN pay as p USING (order_id);
+
+-- ## 9) Ortalama iptal oranı ve etkisi
+
+SELECT
+  ROUND(100 * COUNTIF(order_status = 'canceled') / COUNT(*), 2) AS cancel_rate_pct
+FROM `pacific-legend-474020-b4.olist.olist_orders_dataset`;
+
+-- Satıcı bazında iptal oranı ve temel hacimler
+select 
+oi.seller_id,
+count(*) as orders_total,
+countif(o.order_status = 'canceled') as orders_canceled,
+round(100 * countif(o.order_status = 'canceled') / count(*),2) as cancel_rate
+from `pacific-legend-474020-b4.olist.olist_order_items_dataset` as oi
+join `pacific-legend-474020-b4.olist.olist_orders_dataset` as o using(order_id)
+group by seller_id
+order by cancel_rate desc, orders_total desc;
+
+-- ## 10) En çok satanlar ve yıllık satış trendi
+
+SELECT
+  EXTRACT(YEAR FROM DATETIME(o.order_approved_at))  AS year,
+  COALESCE(pc.string_field_1, 'unknown_category') AS category,
+  COUNT(oi.product_id)  AS no_product_sold,
+  ROUND(SUM(pa.payment_value),2)  AS total_rev
+FROM `pacific-legend-474020-b4.olist.olist_order_items_dataset`  AS oi
+JOIN `pacific-legend-474020-b4.olist.olist_products_dataset` AS p   USING (product_id)
+LEFT JOIN `pacific-legend-474020-b4.olist.product_category_name_translation` AS pc
+  ON LOWER(p.product_category_name) = LOWER(pc.string_field_0)
+JOIN `pacific-legend-474020-b4.olist.olist_orders_dataset` AS o   USING (order_id)
+JOIN `pacific-legend-474020-b4.olist.olist_order_payments_dataset` AS pa  USING (order_id)
+WHERE o.order_status <> 'canceled' AND o.order_approved_at IS NOT NULL
+GROUP BY year, category
+ORDER BY year, total_rev DESC;
+
+-- ## 11) Ödeme yöntemleri – genel, kategoriye ve konuma göre
+
+-- Genel dağılım
+WITH valid_pay AS (
+  SELECT p.order_id, p.payment_type, p.payment_value
+  FROM `pacific-legend-474020-b4.olist.olist_order_payments_dataset` p
+  JOIN `pacific-legend-474020-b4.olist.olist_orders_dataset` o USING (order_id)
+  WHERE o.order_status <> 'canceled' AND o.order_approved_at IS NOT NULL
+)
+SELECT
+  payment_type,
+  COUNT(DISTINCT order_id)                                        AS orders,
+  SUM(payment_value)                                              AS revenue,
+  ROUND(100 * COUNT(DISTINCT order_id) /
+        SUM(COUNT(DISTINCT order_id)) OVER (), 2)                 AS orders_pct,
+  ROUND(100 * SUM(payment_value) /
+        SUM(SUM(payment_value)) OVER (), 2)                       AS revenue_pct
+FROM valid_pay
+GROUP BY payment_type
+ORDER BY orders DESC;
+
+-- Kategori × ödeme tipi
+WITH valid_pay AS (
+  SELECT p.order_id, p.payment_type, p.payment_value
+  FROM `pacific-legend-474020-b4.olist.olist_order_payments_dataset` as p
+  JOIN `pacific-legend-474020-b4.olist.olist_orders_dataset` o USING (order_id)
+  WHERE o.order_status <> 'canceled' AND o.order_approved_at IS NOT NULL
+),
+order_cat AS (
+  SELECT
+    oi.order_id,
+    COALESCE(tr.string_field_1, 'unknown_category') AS category
+  FROM `pacific-legend-474020-b4.olist.olist_order_items_dataset` as oi
+  JOIN `pacific-legend-474020-b4.olist.olist_products_dataset`as pr USING (product_id)
+  LEFT JOIN `pacific-legend-474020-b4.olist.product_category_name_translation` as tr
+    ON LOWER(pr.product_category_name) = LOWER(tr.string_field_0)
+  GROUP BY oi.order_id, category
+)
+SELECT
+  oc.category,
+  vp.payment_type,
+  COUNT(DISTINCT vp.order_id) AS orders,
+  SUM(vp.payment_value)       AS revenue,
+  ROUND(100 * COUNT(DISTINCT vp.order_id)
+        / SUM(COUNT(DISTINCT vp.order_id)) OVER (PARTITION BY oc.category), 2) AS orders_pct_in_cat,
+  ROUND(100 * SUM(vp.payment_value)
+        / SUM(SUM(vp.payment_value)) OVER (PARTITION BY oc.category), 2) AS revenue_pct_in_cat
+FROM valid_pay as vp
+JOIN order_cat as oc USING (order_id)
+GROUP BY oc.category, vp.payment_type
+ORDER BY oc.category, orders DESC;
+
+-- Eyalet × ödeme tipi
+WITH valid_pay AS (
+  SELECT p.order_id, p.payment_type, p.payment_value, o.customer_id
+  FROM `pacific-legend-474020-b4.olist.olist_order_payments_dataset`as p
+  JOIN `pacific-legend-474020-b4.olist.olist_orders_dataset` as o USING (order_id)
+  WHERE o.order_status <> 'canceled' AND o.order_approved_at IS NOT NULL
+)
+SELECT
+  c.customer_state AS state,
+  vp.payment_type,
+  COUNT(DISTINCT vp.order_id) AS orders,
+  SUM(vp.payment_value)       AS revenue,
+  ROUND(100 * COUNT(DISTINCT vp.order_id)
+        / SUM(COUNT(DISTINCT vp.order_id)) OVER (PARTITION BY c.customer_state), 2) AS orders_pct_in_state,
+  ROUND(100 * SUM(vp.payment_value)
+        / SUM(SUM(vp.payment_value)) OVER (PARTITION BY c.customer_state), 2)  AS revenue_pct_in_state
+FROM valid_pay vp
+JOIN `pacific-legend-474020-b4.olist.customers_clean`as c
+  ON vp.customer_id = c.customer_id
+GROUP BY state, vp.payment_type
+ORDER BY state, orders DESC;
+
+-- ## 13) Kâr marjı (kategori bazında)
+
+WITH pay AS (
+  SELECT order_id, SUM(payment_value) AS payment_value    -- Sipariş bazında toplam ödeme
+  FROM `pacific-legend-474020-b4.olist.olist_order_payments_dataset`
+  GROUP BY order_id
+)
+SELECT
+  COALESCE(tr.string_field_1, 'unknown_category') AS category, 
+  ROUND(
+    (SUM(p.payment_value) - SUM(oi.price) + SUM(oi.freight_value))
+    / NULLIF(SUM(p.payment_value), 0) * 100
+  , 2) AS g_profit_margin
+FROM `pacific-legend-474020-b4.olist.olist_order_items_dataset` AS oi
+JOIN pay   AS p  USING (order_id)
+JOIN `pacific-legend-474020-b4.olist.olist_products_dataset`  AS pr USING (product_id)
+LEFT JOIN `pacific-legend-474020-b4.olist.product_category_name_translation` AS tr
+  ON LOWER(pr.product_category_name) = LOWER(tr.string_field_0)
+JOIN `pacific-legend-474020-b4.olist.olist_orders_dataset` AS o  USING (order_id)
+WHERE o.order_status <> 'canceled' AND o.order_approved_at IS NOT NULL
+GROUP BY category
+ORDER BY g_profit_margin DESC;
+
+-- ## 15) Yüksek müşteri yoğunluklu konumlar
+
+SELECT
+  c.customer_city,
+  c.customer_state,
+  COUNT(DISTINCT c.customer_unique_id) AS unique_customers
+FROM `pacific-legend-474020-b4.olist.customers_clean` AS c
+GROUP BY 1,2
+ORDER BY unique_customers DESC
 
 
