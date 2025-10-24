@@ -61,14 +61,5 @@ Olist verilerini kullanarak:
 
 ---
 
-## 📺 YouTube Serisi
-🎬 Playlist: **“Brazilian E-Commerce Dataset by Olist”**  
-📌 Kanal: [Data Masası](https://www.youtube.com/@datamasasi)  
-Bu sorguların tamamı YouTube eğitim serisinde adım adım anlatılmaktadır.  
-Videolarda, her SQL sorgusunun ardındaki mantık, veri dönüşümleri ve iş içgörüsü detaylı biçimde açıklanmaktadır.
 
 
----
-
-## 📄 Lisans
-MIT License © 2025 [tmy-datamesa](https://github.com/tmy-datamesa)
