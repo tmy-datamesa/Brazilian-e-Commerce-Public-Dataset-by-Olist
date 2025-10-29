@@ -53,13 +53,6 @@ Olist verilerini kullanarak:
 
 ---
 
-## ⚙️ Kullanılan Araçlar
-- **Google BigQuery** — SQL motoru ve analiz ortamı  
-- **Kaggle Dataset** — Olist e-commerce açık veri seti  
-- **GitHub** — Kod ve sonuçların paylaşımı  
-- **Data Masası YouTube Serisi** — SQL adımlarının uygulamalı anlatımı  
-
----
 
 
 
