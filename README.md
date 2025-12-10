@@ -1,5 +1,5 @@
 # Brazilian E-Commerce Public Dataset by Olist  
-**Data Masası | BigQuery SQL Case Study**
+** BigQuery SQL Case Study**
 
 Bu proje, **Kaggle Olist veri seti** üzerinden veri temizliği, dönüşüm ve analiz adımlarını kapsayan bir **BigQuery SQL** çalışmasıdır.  
 Olist’in e-ticaret platformuna ait 100k+ sipariş, müşteri, satıcı ve ürün bilgisinden iş içgörüleri üretilmiştir.
