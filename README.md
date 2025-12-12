@@ -1,4 +1,4 @@
-# 🇧🇷 BigQuery SQL ile Olist E-Ticaret Veri Analizi (Case Study)
+# BigQuery SQL ile Olist E-Ticaret Veri Analizi (Case Study)
 
 Bu proje, Brezilya'nın önde gelen e-ticaret platformu Olist'e ait halka açık veri setini kullanarak **Google BigQuery** üzerinde kapsamlı bir **SQL Vaka Çalışması** (Case Study) sunmaktadır. Proje, veri temizliğinden ileri düzey metrik hesaplamalarına kadar bir veri analizi sürecini baştan sona uygulamayı amaçlamıştır.
 
