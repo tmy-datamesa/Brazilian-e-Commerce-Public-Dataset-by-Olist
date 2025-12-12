@@ -3,7 +3,7 @@
 
 Bu proje, **Kaggle Olist veri seti** üzerinden veri temizliği, dönüşüm ve analiz adımlarını kapsayan bir **BigQuery SQL** çalışmasıdır.  
 Olist’in e-ticaret platformuna ait 100k+ sipariş, müşteri, satıcı ve ürün bilgisinden iş içgörüleri üretilmiştir.
-
+https://colab.research.google.com/drive/1t-P913d__W3QBOuurYXeeTnhm895tTPZ?usp=sharing
 ---
 
 ## 🎯 Proje Amacı
