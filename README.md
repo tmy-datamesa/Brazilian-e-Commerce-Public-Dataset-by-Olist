@@ -1,58 +1,56 @@
-# Brazilian E-Commerce Public Dataset by Olist  
-**BigQuery SQL Case Study**
+# 🇧🇷 BigQuery SQL ile Olist E-Ticaret Veri Analizi (Case Study)
 
-Bu proje, **Kaggle Olist veri seti** üzerinden veri temizliği, dönüşüm ve analiz adımlarını kapsayan bir **BigQuery SQL** çalışmasıdır.  
-Olist’in e-ticaret platformuna ait 100k+ sipariş, müşteri, satıcı ve ürün bilgisinden iş içgörüleri üretilmiştir.
-https://colab.research.google.com/drive/1t-P913d__W3QBOuurYXeeTnhm895tTPZ?usp=sharing
----
+Bu proje, Brezilya'nın önde gelen e-ticaret platformu Olist'e ait halka açık veri setini kullanarak **Google BigQuery** üzerinde kapsamlı bir **SQL Vaka Çalışması** (Case Study) sunmaktadır. Proje, veri temizliğinden ileri düzey metrik hesaplamalarına kadar bir veri analizi sürecini baştan sona uygulamayı amaçlamıştır.
 
-## 🎯 Proje Amacı
-Olist verilerini kullanarak:
-- Veri kalitesi kontrolleri (NULL, duplicate, anormallik tespiti)
-- Coğrafi, müşteri ve satıcı şehir isimlerinin temizlenmesi
-- Sipariş, satış, ürün ve müşteri metriklerinin analizi
-- Zaman serisi trendleri, AOV, CLV ve kârlılık hesapları
-- Gerçek dünyada uygulanabilir iş içgörülerinin çıkarılması
+## 🎯 Proje Amaçları
 
----
+BigQuery'nin gücünden yararlanılarak, Olist'in 100K+ sipariş verisi üzerinden aşağıdaki temel hedefler gerçekleştirilmiştir:
 
-## 🧩 Veri Seti Kaynağı
-- **Kaggle:** [Brazilian E-Commerce Public Dataset by Olist](https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce/data)
-- **Platform:** Google BigQuery (Public Dataset)
-- **Ana SQL dosyası:** [`olist.main.query.sql`](https://github.com/tmy-datamesa/Brazilian-ECommerce-Public-Dataset-by-Olist/blob/main/olist.main.query.sql)
+* Veri kalitesi kontrolü (NULL ve yinelenen kayıtların tespiti).
+* Coğrafi (Şehir/Eyalet) ve metinsel verilerin temizlenmesi ve standartlaştırılması.
+* Satış, sipariş, kârlılık ve müşteri davranışları metriklerinin hesaplanması.
+* Zaman serisi trendleri ve pazar dinamiklerinin analizi.
+* Gerçek iş dünyasına uygulanabilir, aksiyon odaklı içgörüler üretilmesi.
 
----
+## 🧩 Veri Seti ve Metodoloji
 
-## 📚 İçerik Özeti
+| Kriter | Detay |
+| :--- | :--- |
+| **Veri Kaynağı** | Brazilian E-Commerce Public Dataset by Olist (Kaggle) |
+| **Veri Ambarı** | Google BigQuery (Public Dataset) |
+| **Ana Teknoloji** | BigQuery Standard SQL |
+| **Ana SQL Dosyası** | `olist.main.query.sql` |
 
-| Bölüm | Konu | Açıklama |
-|:------|:------|:----------|
-| **1️⃣ Veri Kalitesi Kontrolü** | NULL ve duplicate analizleri | Her tablo için eksik/veri tekrar kontrolleri |
-| **2️⃣ Veri Temizleme (Cleaning)** | City sütunlarında aksan & özel karakter temizliği | `TRANSLATE()`, `REGEXP_REPLACE()` |
-| **3️⃣ Geolocation Standardizasyonu** | Şehir ve eyalet adlarının normalize edilmesi | `CREATE OR REPLACE TABLE ...` |
-| **4️⃣ Seller & Customer Temizliği** | `seller_city`, `customer_city` düzeltmeleri | Aksan, özel karakter, gereksiz boşluklar |
-| **5️⃣ Sipariş Analizi (Orders)** | Toplam sipariş, teslimat, iptal, zaman trendi | Günlük, aylık, çeyreklik trendler |
-| **6️⃣ Gelir ve Kârlılık Analizi** | Ciro, AOV, kâr marjı, ödeme tipi | `SUM()`, `ROUND()`, `GROUP BY` |
-| **7️⃣ Satıcı Performansı** | Aktif satıcı sayısı, satış hacmi, süre analizi | `DATE_DIFF()` ile aktiflik ölçümü |
-| **8️⃣ Müşteri Davranışları** | Tekrar alım, sadakat, yoğunluk analizi | `COUNTIF()`, `PARTITION BY` |
-| **9️⃣ Ürün Analizi** | Popüler kategoriler, yıllık trend, rating etkisi | Kategori bazında `JOIN` ve `GROUP BY` |
-| **🔟 Ödeme Analizi** | Yöntem bazlı ciro, eyalet & kategori kırılımı | `WINDOW FUNCTIONS`, yüzde dağılım hesapları |
+### 🛠️ Kapsamlı Analiz Akışı
+
+Proje, titiz bir veri işleme ve analiz akışını takip etmiştir:
+
+| Bölüm | Konu | Kullanılan Temel SQL Fonksiyonları |
+| :--- | :--- | :--- |
+| 1️⃣ Veri Kalitesi Kontrolü | NULL ve duplicate analizleri | `COUNT(*), GROUP BY, HAVING` |
+| 2️⃣ Veri Temizleme (Cleaning) | Coğrafi verilerde aksan & özel karakter temizliği | `TRANSLATE(), REGEXP_REPLACE()` |
+| 3️⃣ Geolocation Standardizasyonu | Şehir ve eyalet adlarının normalize edilmesi | `CREATE OR REPLACE TABLE, WHERE` |
+| 5️⃣ Sipariş Analizi | Toplam sipariş, teslimat, iptal, zaman trendi | `DATE_TRUNC(), COUNTIF()` |
+| 6️⃣ Gelir ve Kârlılık Analizi | Ciro, AOV, kâr marjı, ödeme tipi dağılımı | `SUM(), ROUND(), GROUP BY` |
+| 7️⃣ Satıcı Performansı | Aktif satıcı sayısı, satış hacmi, aktiflik süresi analizi | `DATE_DIFF()` |
+| 8️⃣ Müşteri Davranışları | Tekrar alım (sadakat) ve yoğunluk analizi | `COUNTIF(), PARTITION BY` |
+| 🔟 Ödeme Analizi | Ödeme yöntemi bazlı ciro, bölgesel kırılımlar | `WINDOW FUNCTIONS` |
 
 ---
 
-## 💡 Elde Edilen İş İçgörüleri
+## 💡 Temel İş İçgörüleri (Key Insights)
 
-- **Toplam gelir:** 15.8M BRL  
-- **Teslim edilen sipariş oranı:** %97  
-- **En yoğun sipariş ayı:** Kasım 2017  
-- **En çok sipariş veren eyalet:** SP (São Paulo)  
-- **En popüler kategoriler:** bed_bath_table, health_beauty, sports_leisure  
-- **Tekrar alışveriş yapan müşteri oranı:** %5.7  
-- **Ortalama kâr marjı:** %12.4  
-- **En yaygın ödeme tipi:** Credit Card (%77)  
+Kapsamlı SQL sorgularından elde edilen en kritik iş sonuçları aşağıdadır:
+
+| Metrik | Sonuç | İş Yorumu ve Önerisi |
+| :--- | :--- | :--- |
+| **Toplam Gelir** | **15.8M BRL** | Brüt satış hacmi, pazar büyüklüğünün temel göstergesidir. |
+| **Teslim Edilen Sipariş Oranı** | **%97** | Mükemmel lojistik başarı oranı. Müşteri memnuniyetini olumlu etkiler. |
+| **En Yoğun Sipariş Ayı** | **Kasım 2017** | Black Friday döneminin Brezilya e-ticaret pazarındaki dominant etkisini gösterir. Kampanyalar bu döneme yoğunlaştırılmalıdır. |
+| **En Çok Sipariş Veren Eyalet** | **SP (São Paulo)** | Pazar yoğunluğunun coğrafi olarak São Paulo'da (Güneydoğu Bölgesi) toplandığını gösterir. |
+| **Tekrar Alışveriş Yapan Müşteri Oranı** | **%5.7** | Sadakat oranının düşük olduğunu işaret eder. Müşteri tutma (retention) programlarına yatırım yapılmalıdır. |
+| **Ortalama Kâr Marjı** | **%12.4** | Kârlılık marjı düşüktür. Özellikle lojistik maliyetleri ve ürün maliyetleri detaylı incelenmelidir. |
+| **En Popüler Kategoriler** | `bed_bath_table`, `health_beauty` | Bu kategorilerde pazar liderliğini korumak için stok ve fiyatlama stratejileri optimize edilmelidir. |
+| **En Yaygın Ödeme Tipi** | **Credit Card (%77)** | Kredi kartı entegrasyonu ve güvenliğine öncelik verilmelidir. Taksitli ödeme (installment) seçenekleri genişletilmelidir. |
 
 ---
-
-
-
-
